@@ -1,3 +1,5 @@
-string = "no clouds here to spy on pets"
-shortened = string[::5]
-print(shortened[::-1])
+print("""
+X O X
+O X O
+X X O
+""")
