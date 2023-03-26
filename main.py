@@ -1,16 +1,7 @@
 # Description: Tic-Tac-Toe game in Python
 import string
 
-combined_string = input()
-line_1 = combined_string[:3]
-line_2 = combined_string[3:6]
-line_3 = combined_string[6:]
-column_1 = line_1[0] + line_2[0] + line_3[0]
-column_2 = line_1[1] + line_2[1] + line_3[1]
-column_3 = line_1[2] + line_2[2] + line_3[2]
-diagonal_1 = line_1[0] + line_2[1] + line_3[2]
-diagonal_2 = line_1[2] + line_2[1] + line_3[0]
-board_state = [line_1, line_2, line_3]
+board_state = ["___", "___", "___"]
 symbols = ["X", "O"]
 
 
@@ -21,7 +12,7 @@ def print_board(board):
     print("|", board[2][0], board[2][1], board[2][2], "|")
     print("---------")
 
-def user_play():
+def user_play(symbol):
     played = False
     while not played:
         line_input, column_input = input().split()
@@ -32,7 +23,7 @@ def user_play():
         elif board_state[int(line_input) - 1][int(column_input) - 1] in symbols:
             print("This cell is occupied! Choose another one!")
         else:
-            board_state[int(line_input) - 1] = board_state[int(line_input) - 1][:int(column_input) - 1] + symbols[0] + board_state[int(line_input) - 1][int(column_input):]
+            board_state[int(line_input) - 1] = board_state[int(line_input) - 1][:int(column_input) - 1] + str(symbols[symbol]) + board_state[int(line_input) - 1][int(column_input):]
             played = True
             print_board(board_state)
 def check_win(symbol):
@@ -44,34 +35,44 @@ def check_win(symbol):
         _bool_: _if symbol won or not_
     """
     if symbol * 3 in [
-        line_1,
-        line_2,
-        line_3,
-        column_1,
-        column_2,
-        column_3,
-        diagonal_1,
-        diagonal_2,
+        board_state[0],
+        board_state[1],
+        board_state[2],
+        board_state[0][0] + board_state[1][0] + board_state[2][0],
+        board_state[0][1] + board_state[1][1] + board_state[2][1],
+        board_state[0][2] + board_state[1][2] + board_state[2][2],
+        board_state[0][0] + board_state[1][1] + board_state[2][2],
+        board_state[0][2] + board_state[1][1] + board_state[2][0],
     ]:
         return True
     else:
         return False
 
+def check_draw():
+    if (not check_win("X") and not check_win("O")) and (
+    "_" or " "
+) not in board_state[0] and ("_" or " ") not in board_state[1] and (
+    "_" or " " ) not in board_state[2]:
+        return True
 
-# if (abs(combined_string.count(symbols[0]) - combined_string.count(symbols[1])) > 1) or (
-#     check_win("X") and check_win("O")
-# ):
-#     print("Impossible")
-# elif (not check_win("X") and not check_win("O")) and (
-#     "_" or " "
-# ) not in combined_string:
-#     print("Draw")
-# elif check_win(symbols[0]):
-#     print(symbols[0], "wins")
-# elif check_win(symbols[1]):
-#     print(symbols[1], "wins")
-# else:
-#     print("Game not finished")
 
-print_board(board_state)
-user_play()
+def main():
+    user_num = 0
+    print_board(board_state)
+    while True:
+        user_play(user_num)
+        if any([check_win("X"), check_win("O"), check_draw()]):
+            if check_win("X"):
+                print("X wins")
+                return
+            elif check_win("O"):
+                print("O wins")
+                return
+            else:
+                print("Draw")
+                return
+        user_num = (user_num + 1) % 2
+        
+
+
+main()
